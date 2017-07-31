@@ -1,0 +1,28 @@
+		Charset cs_SJIS = Charset.forName("SJIS");
+		Charset cs_GBK = Charset.forName("GBK");
+		String filePath = "C:\\tmp\\";
+		List<String> oldFileNames = new ArrayList<String>();
+		List<String> newFileNames = new ArrayList<String>();
+
+		File dir = new File("C:\\tmp\\");
+		File backupFile = new File(filePath + "file_names_backup.bak");
+		File[] fileArray = dir.listFiles();
+
+		for(File f : fileArray){
+			String fName = f.getName();
+			oldFileNames.add(fName);
+			CharBuffer cb = cs_SJIS.decode(ByteBuffer.wrap(fName.getBytes(cs_GBK)));
+			String newFName = cb.toString();
+			newFileNames.add(newFName);
+			System.out.println(fName + "  →  " + newFName);
+		}
+
+		System.out.println("Is this OK? (y/n):");
+		Scanner scanner = new Scanner(System.in);
+		if(scanner.nextLine().equals("y")){
+			renameFiles(filePath,oldFileNames,newFileNames,backupFile);
+		}else{
+			System.out.println("Bye. For now.");
+			System.exit(0);
+		}
+		System.out.println("Renaming over. Bye.");
